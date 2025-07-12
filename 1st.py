@@ -10,54 +10,42 @@ def singup():
     users.append(user)
 
 def login():
+    find = False
+    name2 =  input("Username: ")
+    password2 = input("Password: ")
     for user in users:
-        while True:
-            name2 =  input("Username: ")
-            password2 = input("Password: ")
-            if name2 != user["name"] or password2 != user["password"]:
-                print("Incorrect username or password") 
-            else:
-                print("Welcome back sir! ")
-                break
-
+        if name2 == user["name"] or password2 == user["password"]:
+            find = True
+            print("Welcome back sir! ")
+    if find == False:
+        print("Incorrect username or password")    
 def change_password():
-    while True:
-        #2FA code generator
-        pin_lenght = 6
-        pin = "".join(str(random.randint(0,9))for _ in range(pin_lenght))
-        name = input("Enter your account username: ")
-        for user in users:
-            if name == user["name"]:
-                print(f"Your 2FA code is: {pin}")
-                twoFA_code = int(input("Enter the code that we send: "))
-                while True:
-                    if twoFA_code != pin:
-                        pin = "".join(str(random.randint(0,9))for _ in range(pin_lenght))
-                        print("Incorrect code! ")
-                        print(f"Your new 2FA code is: {pin}")
-                        twoFA_code = int(input("Enter the code that we send: "))    
-                    elif twoFA_code == pin: #create the new password
-                        newpassword = ("Enter the new password: ")
-                        for user in users:
-                            user["password"] = newpassword
-                            break                
-            else:
-                print("We couldn't find your account! ")
-def delete_account():
+    find = False
+    name = input("Enter you account username: ")
     for user in users:
-        name3 = input("Enter your username: ")
+        if user["name"] == name:
+            find = True
+            password = input("Enter the curent password: ")
+            if user["password"] == password and user["name"] == name:
+                new_password = input("Enter your new password: ")
+                user["password"] = new_password         
+    if find == False:
+        print("We couldn't find your account")
+def delete_account():
+    name3 = input("Enter your username: ")
+    for user in users:  
         if name3 == user["name"]:
             print("if you dleted your account you can't login again to your account or recover it!!!!")
             condition = input("are you shur you want to delete your account(yes/no): ")
-            while True:
-                if condition == "yes":
+            if condition == "yes":
                     password3 = input("Enter your account password: ")       
-                    if password3 == user["password"]:
+                    if password3 == user["password"] and name3 == user["name"]:
                         users.remove(user)
+                        print("Your account was deleted successfully")
                     else:
                         print("Incorrect password! ")    
-                elif condition == "no":
-                    break
+            elif condition == "no":
+                print("You're welcome any time sir :)")
         else:
             print("We couldn't find your account! ")              
 #general programme
@@ -72,6 +60,7 @@ def settings():
     print("-----------------------------------------")
     print("1-change password")
     print("2-delete account")
+    print("3-go back")
     print("-----------------------------------------")    
 while True:
     menu()
@@ -81,16 +70,19 @@ while True:
     elif chose == 2:
         login()
     elif chose == 3:
-        settings()
         while True:
+            settings()
             choice = int(input("How we can help you?: "))
             if choice == 1:
                 change_password()
             elif choice == 2:
                 delete_account()
+            elif choice == 3:
+                menu()
+                break    
             else:
-                print("sorry!")
-                break           
+                print("Invaliable service!")
+     
     elif chose == 0:
         print("see you :)")
         break    
